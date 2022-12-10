@@ -46,6 +46,11 @@ public class LSBClient extends LSBCommon {
 	public static boolean updateSky = false;
 	private static boolean isRenderingSky = false;
 
+	private static boolean isClientReady = false;
+
+	public static void SetClientReady(boolean value) { isClientReady = true; }
+	public static boolean IsClientReady() { return isClientReady; }
+
 	public static ShaderInstance getSkyShader() {
 		return skyShader;
 	}
@@ -71,8 +76,9 @@ public class LSBClient extends LSBCommon {
 	private static void noop() {
 	}
 
-	public static void renderSky(RenderLevelLastEvent event) {
-		if (isRenderingSky) {
+	public static void renderSky(PoseStack poseStack, float delta, Matrix4f projectionMatrix) {
+
+		if (isRenderingSky || !isClientReady) {
 			return;
 		}
 
@@ -107,7 +113,7 @@ public class LSBClient extends LSBCommon {
 
 		isRenderingSky = true;
 		RenderTarget mainRenderTarget = mc.getMainRenderTarget();
-		renderActualSky(mc, event);
+		renderActualSky(mc, poseStack, delta, projectionMatrix);
 		isRenderingSky = false;
 
 		mc.gameRenderer.setRenderBlockOutline(true);
@@ -117,10 +123,8 @@ public class LSBClient extends LSBCommon {
 		mainRenderTarget.bindWrite(true);
 	}
 
-	public static void renderActualSky(Minecraft mc, RenderLevelLastEvent event) {
-		PoseStack poseStack = event.getPoseStack();
-		final float delta = event.getPartialTick();
-		Matrix4f projectionMatrix = event.getProjectionMatrix();
+	public static void renderActualSky(Minecraft mc, PoseStack poseStack, float delta, Matrix4f projectionMatrix) {
+
 		LevelRenderer levelRenderer = mc.levelRenderer;
 		LevelRendererLSB levelRendererLSB = (LevelRendererLSB) levelRenderer;
 		GameRenderer gameRenderer = mc.gameRenderer;

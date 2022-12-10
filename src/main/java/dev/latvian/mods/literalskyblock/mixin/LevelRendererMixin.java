@@ -36,4 +36,10 @@ public abstract class LevelRendererMixin implements LevelRendererLSB {
 		renderSnowAndRain(lightTexture, delta, cameraX, cameraY, cameraZ);
 	}
 
+
+	@Inject(method = "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lcom/mojang/math/Matrix4f;)V", at = @At(value = "RETURN", shift = At.Shift.BEFORE))
+	private void rendererEndLevelRender(PoseStack poseStack, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo callback) {
+		LSBClient.renderSky(poseStack, tickDelta, projectionMatrix);
+	}
+
 }

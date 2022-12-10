@@ -10,6 +10,6 @@ import net.minecraftforge.fml.common.Mod;
 public class LSBClientEventHandler {
 	@SubscribeEvent
 	public static void renderLast(RenderLevelLastEvent event) {
-		LSBClient.renderSky(event);
+		//LSBClient.renderSky(event);
 	}
 }
